@@ -1,11 +1,11 @@
 {
   "entrypoint": "index.html",
-  "shell": "src/my-app.html",
+  "shell": "src/acw-app.html",
   "fragments": [
-    "src/my-view1.html",
-    "src/my-view2.html",
-    "src/my-view3.html",
-    "src/my-view404.html"
+    "src/acw-view1.html",
+    "src/acw-view2.html",
+    "src/acw-view3.html",
+    "src/acw-view404.html"
   ],
   "sources": [
     "src/**/*",
