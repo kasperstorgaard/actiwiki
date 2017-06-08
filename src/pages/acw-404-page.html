@@ -1,6 +1,7 @@
-<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../acw-styles.html">
 
-<dom-module id="acw-view404">
+<dom-module id="acw-404-page">
   <template>
     <style>
       :host {
@@ -14,8 +15,8 @@
   </template>
 
   <script>
-    class AcwView404 extends Polymer.Element {
-      static get is() { return 'acw-view404'; }
+    class Acw404Page extends Polymer.Element {
+      static get is() { return 'acw-404-page'; }
       static get properties() {
         return {
           // This shouldn't be neccessary, but the Analyzer isn't picking up
@@ -25,6 +26,6 @@
       }
     }
 
-    window.customElements.define(AcwView404.is, AcwView404);
+    window.customElements.define(Acw404Page.is, Acw404Page);
   </script>
 </dom-module>

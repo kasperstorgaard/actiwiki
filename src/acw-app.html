@@ -11,10 +11,11 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 
 <link rel="import" href="acw-icons.html">
-<link rel="import" href="acw-view1.html">
-<link rel="import" href="acw-view2.html">
-<link rel="import" href="acw-view3.html">
-<link rel="import" href="acw-view404.html">
+
+<link rel="import" href="pages/acw-intro-page.html">
+<link rel="import" href="pages/acw-country-page.html">
+<link rel="import" href="pages/acw-article-page.html">
+<link rel="import" href="pages/acw-404-page.html">
 
 <dom-module id="acw-app">
   <template>
@@ -86,9 +87,8 @@
         attr-for-selected="name"
         class="drawer-list"
         role="navigation">
-        <a name="view1" href="view1">View One</a>
-        <a name="view2" href="view2">View Two</a>
-        <a name="view3" href="view3">View Three</a>
+        <a name="intro" href="intro">intro</a>
+        <a name="country" href="country">Country</a>
       </iron-selector>
     </app-drawer>
 
@@ -96,12 +96,11 @@
       <iron-pages
         selected="[[page]]"
         attr-for-selected="name"
-        fallback-selection="view404"
+        fallback-selection="404"
         role="main">
-        <acw-view1 name="view1"></acw-view1>
-        <acw-view2 name="view2"></acw-view2>
-        <acw-view3 name="view3"></acw-view3>
-        <acw-view404 name="view404"></acw-view404>
+        <acw-intro-page name="intro"></acw-intro-page>
+        <acw-country-page name="country" route="{{subroute}}"></acw-country-page>
+        <acw-404-page name="404"></acw-404-page>
       </iron-pages>
     </div>
   </template>
@@ -141,7 +140,7 @@
           return;
         }
 
-        this.page = page || 'view1';
+        this.page = page || 'intro';
 
         // Close a non-persistent drawer when the page & route are changed.
         if (!this.$.drawer.persistent) {
@@ -150,12 +149,12 @@
       }
 
       _pageChanged(page) {
-        var resolvedPageUrl = this.resolveUrl('acw-' + page + '.html');
-        Polymer.importHref( resolvedPageUrl, null, this._showPage404.bind(this), true);
+        const resolvedPageUrl = this.resolveUrl(`pages/acw-${page}-page.html`);
+        Polymer.importHref(resolvedPageUrl, null, this._showPage404.bind(this), true);
       }
 
       _showPage404() {
-        this.page = 'view404';
+        this.page = '404';
       }
 
       _toggleMenu() {

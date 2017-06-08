@@ -1,0 +1,70 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-input/iron-input.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/app-pouchdb/app-pouchdb-index.html">
+<link rel="import" href="../../bower_components/app-pouchdb/app-pouchdb-conflict-resolution.html">
+<link rel="import" href="../../bower_components/app-pouchdb/app-pouchdb-document.html">
+<link rel="import" href="../../bower_components/app-pouchdb/app-pouchdb-query.html">
+<link rel="import" href="../acw-styles.html">
+
+<dom-module id="acw-country-page">
+  <template>
+    <style include="acw-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+
+    <app-route
+      pattern="/:country"
+      route="{{route}}"
+      data="{{_routeData}}"></app-route>
+
+    <app-pouchdb-conflict-resolution
+      strategy="lastWriteWins">
+    </app-pouchdb-conflict-resolution>
+
+    <!--
+    <app-pouchdb-document
+      db-name="http://localhost:5984/countries"
+      doc-id="tester"
+      data="{{_country}}"
+    ></app-pouchdb-document>
+      -->
+
+    <app-pouchdb-index
+      db-name="http://localhost:5984/countries"
+      fields='["name"]'></app-pouchdb-index> 
+
+
+    <app-pouchdb-query
+      db-name="http://localhost:5984/countries"
+      selector="name $eq '{{_routeData.country}}'"
+      limit="1"
+      sort='["name"]'
+      fields='["_id", "name"]'
+      data="{{_data}}"></app-pouchdb-query>
+
+    <div class="card">
+      <h1>{{_data.0.name}}</h1>
+    </div>
+  </template>
+
+  <script>
+    class AcwCountryPage extends Polymer.Element {
+      static get is() { return 'acw-country-page'; }
+
+      static get properties() {
+        return {
+          route: Object,
+          _data: Array,
+          _routeData: Object
+        };
+      }
+    }
+
+    window.customElements.define(AcwCountryPage.is, AcwCountryPage);
+  </script>
+</dom-module>
