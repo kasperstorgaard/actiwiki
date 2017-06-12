@@ -15,6 +15,10 @@
 
         padding: 10px;
       }
+
+      .description {
+        white-space: text-wrap;
+      }
     </style>
 
     <app-route
@@ -26,29 +30,23 @@
       strategy="lastWriteWins">
     </app-pouchdb-conflict-resolution>
 
-    <!--
-    <app-pouchdb-document
-      db-name="http://localhost:5984/countries"
-      doc-id="tester"
-      data="{{_country}}"
-    ></app-pouchdb-document>
-      -->
-
     <app-pouchdb-index
       db-name="http://localhost:5984/countries"
       fields='["name"]'></app-pouchdb-index> 
-
 
     <app-pouchdb-query
       db-name="http://localhost:5984/countries"
       selector="name $eq '{{_routeData.country}}'"
       limit="1"
       sort='["name"]'
-      fields='["_id", "name"]'
+      fields='["_id", "name", "description"]'
       data="{{_data}}"></app-pouchdb-query>
 
     <div class="card">
       <h1>{{_data.0.name}}</h1>
+      <template is="dom-repeat" items="[[_paragraphs]]">
+        <p>[[item]]</p>
+      </template>
     </div>
   </template>
 
@@ -60,8 +58,15 @@
         return {
           route: Object,
           _data: Array,
-          _routeData: Object
+          _routeData: Object,
+          _paragraphs: {
+            computed: '_getParagraphs(_data.0.description)'
+          }
         };
+      }
+
+      _getParagraphs(description) {
+        return description ? description.split('\n') : [];
       }
     }
 
