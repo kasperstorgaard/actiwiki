@@ -1,6 +1,8 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
@@ -9,6 +11,7 @@
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 
 <link rel="import" href="shared-icons.html">
 
@@ -26,6 +29,10 @@
         display: block;
       }
 
+      app-drawer {
+        padding-top: 64px;
+      }
+
       app-header {
         @apply --layout-fixed-top;
 
@@ -37,11 +44,46 @@
         };
       }
 
+      app-header:after {
+        content: "";
+        display: block;
+        position: absolute;
+        right: 0px;
+        bottom: -5px;
+        left: 0px;
+        width: 100%;
+        height: 5px;
+        pointer-events: none;
+        box-shadow: inset 0px 5px 6px -3px rgba(0, 0, 0, 0.4);
+      }
+
       app-header paper-icon-button {
         --paper-icon-button-ink-color: white;
       }
 
+      @media (min-width: 641px) {
+        app-header #toggle-drawer {
+          display: none;
+        }
+      }
+
+      app-header #logo {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+        line-height: 18px;
+        padding: 8px;
+        display: none;
+      }
+
+      @media (min-width: 641px) {
+        app-header #logo {
+          display: block;
+        }
+      }
+
       .drawer-list {
+        padding-top: 98px;
         margin: 0 20px;
       }
 
@@ -57,10 +99,6 @@
         color: black;
         font-weight: bold;
       }
-
-      .app-content {
-        padding-top: 64px;
-      }
     </style>
 
     <app-location route="{{route}}"></app-location>
@@ -70,38 +108,36 @@
         data="{{routeData}}"
         tail="{{subroute}}"></app-route>
 
-    <app-header reveals>
-      <app-toolbar>
-        <paper-icon-button
-          icon="shared-icons:menu"
-          on-tap="_toggleMenu"></paper-icon-button>
-        <div main-title>Actiwiki</div>
-      </app-toolbar>
-    </app-header>
-
-    <app-drawer id="drawer" swipe-open>
-      <app-toolbar>Menu</app-toolbar>
-      <iron-selector
-        selected="[[page]]"
-        attr-for-selected="name"
-        class="drawer-list"
-        role="navigation">
-        <a name="home" href="home">home</a>
-        <a name="country" href="country">country</a>
-      </iron-selector>
-    </app-drawer>
-
-    <div class="app-content">
-      <iron-pages
-        selected="[[page]]"
-        attr-for-selected="name"
-        fallback-selection="page-not-found"
-        role="main">
-        <home-page name="home"></home-page>
-        <country-page name="country" route="{{subroute}}"></country-page>
-        <page-not-found name="page-not-found"></page-not-found>
-      </iron-pages>
-    </div>
+      <app-header-layout>
+        <app-header slot="header">
+          <app-toolbar>
+            <paper-icon-button id="toggle-drawer" icon="shared-icons:menu" on-tap="_toggleDrawer"></paper-icon-button>
+            <div id="logo">+</div>
+            <div main-title>Actiwiki</div>
+          </app-toolbar>
+        </app-header>
+        <app-drawer-layout>
+          <app-drawer id="drawer" slot="drawer" swipe-open persistent>
+            <div class="drawer-list" role="navigation">
+              <iron-selector selected="[[page]]" attr-for-selected="name">
+                <a name="home" href="home">home</a>
+                <a name="country" href="country">country</a>
+              </iron-selector>
+            </div>
+          </app-drawer>
+          <div class="app-content">
+            <iron-pages
+              selected="[[page]]"
+              attr-for-selected="name"
+              fallback-selection="page-not-found"
+              role="main">
+              <home-page name="home"></home-page>
+              <country-page name="country" route="{{subroute}}"></country-page>
+              <page-not-found name="page-not-found"></page-not-found>
+            </iron-pages>
+          </div>
+      </app-drawer-layout>
+    </app-header-layout>
   </template>
 
   <script>
@@ -118,7 +154,7 @@
           },
           rootPattern: String,
           routeData: Object,
-          subroute: String,
+          subroute: String
         };
       }
 
@@ -156,7 +192,7 @@
         this.page = 'page-not-found';
       }
 
-      _toggleMenu() {
+      _toggleDrawer() {
         this.$.drawer.toggle();
       }
     }
