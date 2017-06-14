@@ -2,9 +2,8 @@
   "entrypoint": "index.html",
   "shell": "src/acw-app.html",
   "fragments": [
-    "src/pages/acw-intro-page.html",
-    "src/pages/acw-countr-page.html",
-    "src/pages/acw-article-page.html",
+    "src/pages/acw-home-page.html",
+    "src/pages/acw-country-page.html",
     "src/pages/acw-404-page.html"
   ],
   "sources": [

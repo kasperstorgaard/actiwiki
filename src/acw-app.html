@@ -12,9 +12,8 @@
 
 <link rel="import" href="acw-icons.html">
 
-<link rel="import" href="pages/acw-intro-page.html">
+<link rel="import" href="pages/acw-home-page.html">
 <link rel="import" href="pages/acw-country-page.html">
-<link rel="import" href="pages/acw-article-page.html">
 <link rel="import" href="pages/acw-404-page.html">
 
 <dom-module id="acw-app">
@@ -87,7 +86,7 @@
         attr-for-selected="name"
         class="drawer-list"
         role="navigation">
-        <a name="intro" href="intro">intro</a>
+        <a name="home" href="home">home</a>
         <a name="country" href="country">Country</a>
       </iron-selector>
     </app-drawer>
@@ -98,7 +97,7 @@
         attr-for-selected="name"
         fallback-selection="404"
         role="main">
-        <acw-intro-page name="intro"></acw-intro-page>
+        <acw-home-page name="home"></acw-home-page>
         <acw-country-page name="country" route="{{subroute}}"></acw-country-page>
         <acw-404-page name="404"></acw-404-page>
       </iron-pages>
@@ -140,7 +139,7 @@
           return;
         }
 
-        this.page = page || 'intro';
+        this.page = page || 'home';
 
         // Close a non-persistent drawer when the page & route are changed.
         if (!this.$.drawer.persistent) {
