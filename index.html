@@ -55,7 +55,8 @@
     </script>
     
     <script src="bower_components/webcomponentsjs/webcomponents-loader.js"></script>
-    
+
+    <link rel="import" href="bower_components/polymerfire/firebase-app.html"></link>
     <link rel="import" href="src/actiwiki-app.html">
     
     <style>
@@ -70,6 +71,13 @@
     </style>
   </head>
   <body>
+    <firebase-app
+      name="actiwiki"
+      api-key="AIzaSyCwVos60GAQ6jjqPs34Ppux1CmDwkOiaEc"
+      auth-domain="actiwiki-c9ab7.firebaseapp.com"
+      database-url="https://actiwiki-c9ab7.firebaseio.com">
+    </firebase-app>
+
     <actiwiki-app></actiwiki-app>
 
     <noscript>
