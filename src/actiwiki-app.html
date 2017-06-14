@@ -10,13 +10,13 @@
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 
-<link rel="import" href="acw-icons.html">
+<link rel="import" href="shared-icons.html">
 
-<link rel="import" href="pages/acw-home-page.html">
-<link rel="import" href="pages/acw-country-page.html">
-<link rel="import" href="pages/acw-404-page.html">
+<link rel="import" href="pages/home-page.html">
+<link rel="import" href="pages/country-page.html">
+<link rel="import" href="pages/page-not-found.html">
 
-<dom-module id="acw-app">
+<dom-module id="actiwiki-app">
   <template>
     <style>
       :host {
@@ -73,7 +73,7 @@
     <app-header reveals>
       <app-toolbar>
         <paper-icon-button
-          icon="acw-icons:menu"
+          icon="shared-icons:menu"
           on-tap="_toggleMenu"></paper-icon-button>
         <div main-title>Actiwiki</div>
       </app-toolbar>
@@ -87,7 +87,7 @@
         class="drawer-list"
         role="navigation">
         <a name="home" href="home">home</a>
-        <a name="country" href="country">Country</a>
+        <a name="country" href="country">country</a>
       </iron-selector>
     </app-drawer>
 
@@ -95,19 +95,19 @@
       <iron-pages
         selected="[[page]]"
         attr-for-selected="name"
-        fallback-selection="404"
+        fallback-selection="page-not-found"
         role="main">
-        <acw-home-page name="home"></acw-home-page>
-        <acw-country-page name="country" route="{{subroute}}"></acw-country-page>
-        <acw-404-page name="404"></acw-404-page>
+        <home-page name="home"></home-page>
+        <country-page name="country" route="{{subroute}}"></country-page>
+        <page-not-found name="page-not-found"></page-not-found>
       </iron-pages>
     </div>
   </template>
 
   <script>
-    class AcwApp extends Polymer.Element {
+    class ActiwikiApp extends Polymer.Element {
 
-      static get is() { return 'acw-app'; }
+      static get is() { return 'actiwiki-app'; }
 
       static get properties() {
         return {
@@ -148,12 +148,12 @@
       }
 
       _pageChanged(page) {
-        const resolvedPageUrl = this.resolveUrl(`pages/acw-${page}-page.html`);
-        Polymer.importHref(resolvedPageUrl, null, this._showPage404.bind(this), true);
+        const resolvedPageUrl = this.resolveUrl(`pages/${page}-page.html`);
+        Polymer.importHref(resolvedPageUrl, null, this._pageNotFound.bind(this), true);
       }
 
-      _showPage404() {
-        this.page = '404';
+      _pageNotFound() {
+        this.page = 'page-not-found';
       }
 
       _toggleMenu() {
@@ -161,6 +161,6 @@
       }
     }
 
-    window.customElements.define(AcwApp.is, AcwApp);
+    window.customElements.define(ActiwikiApp.is, ActiwikiApp);
   </script>
 </dom-module>

@@ -1,9 +1,9 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../acw-styles.html">
+<link rel="import" href="../shared-styles.html">
 
-<dom-module id="acw-home-page">
+<dom-module id="home-page">
   <template>
-    <style include="acw-styles">
+    <style include="shared-styles">
       :host {
         display: block;
 
@@ -20,10 +20,10 @@
   </template>
 
   <script>
-    class AcwhomePage extends Polymer.Element {
-      static get is() { return 'acw-home-page'; }
+    class homePage extends Polymer.Element {
+      static get is() { return 'home-page'; }
     }
 
-    window.customElements.define(AcwhomePage.is, AcwhomePage);
+    window.customElements.define(homePage.is, homePage);
   </script>
 </dom-module>

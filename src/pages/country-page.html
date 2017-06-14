@@ -1,0 +1,55 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-input/iron-input.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../shared-styles.html">
+
+<dom-module id="country-page">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+
+      .description {
+        white-space: text-wrap;
+      }
+    </style>
+
+    <app-route
+      pattern="/:country"
+      route="{{route}}"
+      data="{{_routeData}}"></app-route>
+
+    <div class="card">
+      <h1>{{_data.0.name}}</h1>
+      <template is="dom-repeat" items="[[_paragraphs]]">
+        <p>[[item]]</p>
+      </template>
+    </div>
+  </template>
+
+  <script>
+    class CountryPage extends Polymer.Element {
+      static get is() { return 'country-page'; }
+
+      static get properties() {
+        return {
+          route: Object,
+          _data: Array,
+          _routeData: Object,
+          _paragraphs: {
+            computed: '_getParagraphs(_data.0.description)'
+          }
+        };
+      }
+
+      _getParagraphs(description) {
+        return description ? description.split('\n') : [];
+      }
+    }
+
+    window.customElements.define(CountryPage.is, CountryPage);
+  </script>
+</dom-module>

@@ -4,26 +4,26 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>acw-view1</title>
+    <title>view1</title>
 
     <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
     <script src="../bower_components/web-component-tester/browser.js"></script>
 
     
-    <link rel="import" href="../src/acw-view1.html">
+    <link rel="import" href="../src/pages/home-page.html.html">
   </head>
   <body>
     <test-fixture id="BasicView">
       <template>
-        <acw-view1></acw-view1>
+        <view1></view1>
       </template>
     </test-fixture>
 
     <script>
-      suite('acw-view1 tests', function() {
+      suite('sample tests', function() {
         test('Number in circle should be 1', function() {
-          var AcwView = fixture('BasicView');
-          var circle = AcwView.shadowRoot.querySelector('.circle');
+          var view = fixture('BasicView');
+          var circle = view.shadowRoot.querySelector('.circle');
           assert.equal(circle.textContent, '1');
         });
       });
