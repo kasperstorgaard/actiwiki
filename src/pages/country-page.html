@@ -1,6 +1,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/iron-input/iron-input.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-document.html"></link>
+
 <link rel="import" href="../shared-styles.html">
 
 <dom-module id="country-page">
@@ -22,11 +24,15 @@
       route="{{route}}"
       data="{{_routeData}}"></app-route>
 
+    <firebase-document
+      app-name="actiwiki"
+      path="/countries/{{_routeData.country}}"
+      data="{{_data}}"
+    ></firebase-document>
+
     <div class="card">
-      <h1>{{_data.0.name}}</h1>
-      <template is="dom-repeat" items="[[_paragraphs]]">
-        <p>[[item]]</p>
-      </template>
+      <h1>{{_data.name}}</h1>
+      <p>{{_data.description}}</p>
     </div>
   </template>
 
@@ -37,16 +43,10 @@
       static get properties() {
         return {
           route: Object,
-          _data: Array,
+          _data: Object,
           _routeData: Object,
-          _paragraphs: {
-            computed: '_getParagraphs(_data.0.description)'
-          }
+          _all: Object
         };
-      }
-
-      _getParagraphs(description) {
-        return description ? description.split('\n') : [];
       }
     }
 
