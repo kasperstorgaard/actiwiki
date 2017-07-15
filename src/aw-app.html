@@ -12,9 +12,7 @@
 
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 
-<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 
 <link rel="import" href="../bower_components/polymerfire/firebase-app.html">
 
@@ -26,7 +24,7 @@
 <link rel="import" href="pages/country/aw-country.html">
 <link rel="import" href="pages/404/aw-404.html">
 
-<link rel="import" href="shared/aw-router-behavior.html"></link>
+<link rel="import" href="aw-app-router.html">
 
 <dom-module id="aw-app">
   <template>
@@ -99,6 +97,8 @@
       database-url="https://actiwiki-c9ab7.firebaseio.com">
     </firebase-app>
 
+    <aw-app-router page="{{page}}" subroute="{{subroute}}"></aw-app-router>
+
     <app-header-layout>
       <app-header slot="header">
         <app-toolbar>
@@ -127,37 +127,21 @@
   </template>
 
   <script>
-    class AwApp extends AwRouterBehavior(Polymer.Element) {
+    class AwApp extends Polymer.Element {
 
       static get is() { return 'aw-app'; }
 
       static get properties() {
         return {
-          page: Object,
-          routePattern: {
-            type: String,
-            computed: `_getRoutePattern(_rootPath, ':page')`
-          },
-          routes: {
-            value: () => [
-              { name: 'home', title: 'Home', icon: '' },
-              { name: 'country', title: 'Country', icon: '' },
-              { name: 'general', title: 'General', icon: '' }
-            ]
-          },
-          _user: Object
+          _user: Object,
+          page: Object
         };
       }
 
       static get observers() {
         return [
-          '_loadPage(routeData.page)'
+          '_pageChanged(page.name)'
         ]
-      }
-
-      constructor() {
-        super();
-        this._rootPath = (new URL(this.rootPath)).pathname;
       }
 
       _toggleDrawer() {
@@ -168,21 +152,6 @@
         if (!this.$.drawer.persistent) {
           this.$.drawer.close();
         }
-      }
-
-      _getRoutePattern(rootPath, pattern) {
-        return rootPath ? rootPath + pattern : '';
-      }
-
-      _loadPage(name) {
-        name = name || 'home';
-        this.page = this.routes.find(route => route.name === name);
-
-        const url = this.resolveUrl(`pages/${name}/aw-${name}.html`);
-
-        Polymer.importHref(url, null, () => {
-          Polymer.importHref('pages/404/aw-404.html');
-        });
       }
     }
 

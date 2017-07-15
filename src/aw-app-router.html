@@ -1,0 +1,64 @@
+<link rel="import" href="shared/aw-router-behavior.html"></link>
+
+<dom-module id="aw-app-router">
+  <script>
+    (() => {
+      const pagesData = [
+        { name: 'home', title: 'Home', icon: '' },
+        { name: 'country', title: 'Country', icon: '' },
+        { name: 'general', title: 'General', icon: '' }
+      ];
+
+      class AwAppRouter extends AwRouterBehavior(Polymer.Element) {
+        static get is() { return "aw-app-router"; }
+
+        static get properties() {
+          return {
+            page: {
+              type: Object,
+              readonly: true,
+              notify: true
+            },
+            routes: {
+              type: Array,
+              value: () => pagesData.slice()
+            },
+            _pageName: String
+          }
+        }
+
+        static get observers() {
+          return [
+            '_routeDataChanged(routeData.page)',
+            '_loadPage(_pageName)'
+          ]
+        }
+
+        constructor() {
+          super();
+          this.pattern = `${(new URL(this.rootPath)).pathname}:page`;
+        }
+
+        _routeDataChanged(page) {
+          if (page === undefined)
+          {
+            return;
+          }
+
+          this._pageName = page || "home";
+          this.page = this.routes.find(page => page.name === this._pageName);
+        }
+
+        _loadPage(name) {
+          const path = this.resolveUrl(`pages/${name}/aw-${name}.html`);
+
+          Polymer.importHref(path, null, () => {
+            Polymer.importHref('pages/404/aw-404.html');
+            this.page = null;
+          });
+        }
+      }
+      window.customElements.define(AwAppRouter.is, AwAppRouter);
+    })();
+  </script>
+</dom-module>
