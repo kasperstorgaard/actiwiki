@@ -1,7 +1,7 @@
-<link rel="import" href="../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../shared-styles.html">
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../shared-styles.html">
 
-<dom-module id="page-not-found">
+<dom-module id="aw-404">
   <template>
     <style>
       :host {
@@ -15,8 +15,8 @@
   </template>
 
   <script>
-    class PageNotFound extends Polymer.Element {
-      static get is() { return 'page-not-found'; }
+    class Aw404 extends Polymer.Element {
+      static get is() { return 'aw-404'; }
       static get properties() {
         return {
           // This shouldn't be neccessary, but the Analyzer isn't picking up
@@ -26,6 +26,6 @@
       }
     }
 
-    window.customElements.define(PageNotFound.is, PageNotFound);
+    window.customElements.define(Aw404.is, Aw404);
   </script>
 </dom-module>

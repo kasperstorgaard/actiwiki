@@ -1,0 +1,191 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html">
+
+<link rel="import" href="shared-icons.html">
+
+<link rel="import" href="components/main-navigation.html">
+
+<link rel="import" href="pages/home/aw-home.html">
+<link rel="import" href="pages/country/aw-country.html">
+<link rel="import" href="pages/404/aw-404.html">
+
+<link rel="import" href="shared/aw-router-behavior.html"></link>
+
+<dom-module id="aw-app">
+  <template>
+    <style>
+      :host {
+        --app-primary-color: #4285f4;
+        --app-secondary-color: black;
+
+        display: block;
+      }
+
+      app-drawer {
+        padding-top: 64px;
+      }
+
+      app-header {
+        @apply --layout-fixed-top;
+
+        color: #fff;
+        background-color: var(--app-primary-color);
+
+        --app-header-background-rear-layer: {
+          background-color: #ef6c00;
+        };
+      }
+
+      app-header:after {
+        content: "";
+        display: block;
+        position: absolute;
+        right: 0px;
+        bottom: -5px;
+        left: 0px;
+        width: 100%;
+        height: 5px;
+        pointer-events: none;
+        box-shadow: inset 0px 5px 6px -3px rgba(0, 0, 0, 0.4);
+      }
+
+      app-header paper-icon-button {
+        --paper-icon-button-ink-color: white;
+      }
+
+      @media (min-width: 641px) {
+        app-header #toggle-drawer {
+          display: none;
+        }
+      }
+
+      app-header #logo {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+        line-height: 18px;
+        padding: 8px;
+        display: none;
+      }
+
+      @media (min-width: 641px) {
+        app-header #logo {
+          display: block;
+        }
+      }
+    </style>
+
+    <firebase-app
+      name="actiwiki"
+      api-key="AIzaSyCwVos60GAQ6jjqPs34Ppux1CmDwkOiaEc"
+      auth-domain="actiwiki-c9ab7.firebaseapp.com"
+      database-url="https://actiwiki-c9ab7.firebaseio.com">
+    </firebase-app>
+
+    <app-header-layout>
+      <app-header slot="header">
+        <app-toolbar>
+          <paper-icon-button id="toggle-drawer" icon="shared-icons:menu" on-tap="_toggleDrawer"></paper-icon-button>
+          <div id="logo">+</div>
+          <div main-title>Actiwiki</div>
+        </app-toolbar>
+      </app-header>
+
+      <app-drawer-layout>
+        <app-drawer id="drawer" slot="drawer" swipe-open persistent>
+        </app-drawer>
+        <div class="app-content">
+          <iron-pages
+            selected="[[page.name]]"
+            attr-for-selected="name"
+            fallback-selection="page-not-found"
+            role="main">
+            <aw-home name="home"></aw-home>
+            <aw-country name="country" route="[[subroute]]"></aw-country>
+            <aw-404 name="404"></aw-404>
+          </iron-pages>
+        </div>
+      </app-drawer-layout>
+    </app-header-layout>
+  </template>
+
+  <script>
+    class AwApp extends AwRouterBehavior(Polymer.Element) {
+
+      static get is() { return 'aw-app'; }
+
+      static get properties() {
+        return {
+          page: Object,
+          routePattern: {
+            type: String,
+            computed: `_getRoutePattern(_rootPath, ':page')`
+          },
+          routes: {
+            value: () => [
+              { name: 'home', title: 'Home', icon: '' },
+              { name: 'country', title: 'Country', icon: '' },
+              { name: 'general', title: 'General', icon: '' }
+            ]
+          },
+          _user: Object
+        };
+      }
+
+      static get observers() {
+        return [
+          '_loadPage(routeData.page)'
+        ]
+      }
+
+      constructor() {
+        super();
+        this._rootPath = (new URL(this.rootPath)).pathname;
+      }
+
+      _toggleDrawer() {
+        this.$.drawer.toggle();
+      }
+
+      _pageChanged() {
+        if (!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
+      }
+
+      _getRoutePattern(rootPath, pattern) {
+        return rootPath ? rootPath + pattern : '';
+      }
+
+      _loadPage(name) {
+        name = name || 'home';
+        this.page = this.routes.find(route => route.name === name);
+
+        const url = this.resolveUrl(`pages/${name}/aw-${name}.html`);
+
+        Polymer.importHref(url, null, () => {
+          Polymer.importHref('pages/404/aw-404.html');
+        });
+      }
+    }
+
+    window.customElements.define(AwApp.is, AwApp);
+  </script>
+</dom-module>

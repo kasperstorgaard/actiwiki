@@ -1,6 +1,6 @@
 {
   "entrypoint": "index.html",
-  "shell": "src/actiwiki-app.html",
+  "shell": "src/aw-app.html",
   "fragments": [
     "src/pages/home-page.html",
     "src/pages/country-page.html",

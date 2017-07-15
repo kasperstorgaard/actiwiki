@@ -1,0 +1,63 @@
+<link rel='import' href='../../bower_components/polymer/polymer-element.html'>
+<link rel='import' href='../../bower_components/app-route/app-location.html'>
+<link rel='import' href='../../bower_components/app-route/app-route.html'>
+
+<script>
+  (function () {
+    window.AwRouterBehavior = (SuperClass) => class AwRouterBehavior extends SuperClass {
+      static get properties() {
+        return {
+          routePattern: String,
+          subroute: {
+            type: Object,
+            computed: '_get(_appRoute.tail)'
+          },
+          routeData: {
+            type: Object,
+            computed: '_get(_appRoute.data)'
+          },
+          _appLocation: Object,
+          _appRoute: Object
+        };
+      }
+
+      static get observers() {
+        return [
+          '_setPattern(_appRoute, routePattern)',
+          '_setRoute(_appRoute, _appLocation.route)'
+        ];
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+
+        this._appLocation = document.createElement('app-location');
+        this._appLocation.addEventListener('route-changed', () => console.log('>?'));
+
+        this._appRoute = document.createElement('app-route', {
+          pattern: this.routePattern,
+          route: this._appLocation.route
+        });
+      }
+
+      _setPattern(appRoute, pattern) {
+        if (!appRoute || !pattern)
+        {
+          return;
+        }
+        appRoute.pattern = pattern;
+      }
+
+      _setRoute(appRoute, route) {
+        if (!appRoute) {
+          return;
+        }
+        appRoute.route = route;
+      }
+
+      _get(value) {
+        return value;
+      }
+    }
+  }());
+</script>

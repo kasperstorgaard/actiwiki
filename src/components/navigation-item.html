@@ -1,0 +1,35 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+
+<dom-module id="navigation-item">
+    <template>
+        <style>
+        </style>
+
+        <a href="[[route.prefix]]">[[_data.page]]</a>
+    </template>
+    <script>
+        class NavigationItem extends Polymer.Element {
+            static get is() { return 'navigation-item'; }
+
+            static get properties() {
+                return {
+                    type: String,
+                    name: String,
+                    subroute: {
+                        type: Object,
+                        notifies: true
+                    },
+                    _data: String
+                }
+            }
+
+            _isActive(key, active)
+            {
+                return key === active;
+            }
+        }
+        window.customElements.define(NavigationItem.is, NavigationItem);
+    </script>
+</dom-module>

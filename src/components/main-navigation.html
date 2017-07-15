@@ -1,0 +1,56 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+
+<dom-module id="main-navigation">
+    <template>
+        <style>
+            .drawer-list {
+                padding-top: 98px;
+                margin: 0 20px;
+            }
+
+            .drawer-list a {
+                display: block;
+                padding: 0 16px;
+                text-decoration: none;
+                color: var(--app-secondary-color);
+                line-height: 40px;
+            }
+
+            .drawer-list a.iron-selected {
+                color: black;
+                font-weight: bold;
+            }
+        </style>
+
+        <iron-selector role="navigation" class="drawer-list" selected="[[pageName]]" attr-for-selected="name">
+          <dom-repeat items="[[pages]]" as="section" initial-count="3">
+            <template>
+              <a name="[[section.name]]" href="/[[section.name]]">[[section.title]]</a>
+            </template>
+          </dom-repeat>
+        </iron-selector>
+        <div class="drawer-list" role="navigation">
+        </div>
+    </template>
+    <script>
+        class MainNavigation extends Polymer.Element {
+            static get is() { return 'main-navigation'; }
+
+            static get properties() {
+                return {
+                    page: Object,
+                    route: Object,
+                    _subroute: Object
+                }
+            }
+
+            _isActive(key, activePage)
+            {
+                return key === activePage
+            }
+        }
+        window.customElements.define(MainNavigation.is, MainNavigation);
+    </script>
+</dom-module>

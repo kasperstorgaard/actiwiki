@@ -1,0 +1,63 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/iron-input/iron-input.html">
+<link rel="import" href="../../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html"></link>
+<link rel="import" href="../../../bower_components/polymerfire/firebase-document.html"></link>
+
+<link rel="import" href="../../shared-styles.html">
+
+<dom-module id="aw-country">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+
+      .description {
+        white-space: text-wrap;
+      }
+    </style>
+
+    <app-route
+      pattern="/:country"
+      route="{{route}}"
+      data="{{_routeData}}"></app-route>
+
+    <firebase-document
+      app-name="actiwiki"
+      path="/countries/{{_routeData.country}}"
+      data="{{_liveData}}"
+    ></firebase-document>
+
+    <app-indexeddb-mirror
+      key="/countries/{{_routeData.country}}"
+      data="{{_liveData}}"
+      persisted-data="{{_data}}"
+    ></app-indexeddb-mirror>
+
+    <div class="card">
+      <h1>{{_data.name}}</h1>
+      <p>{{_data.description}}</p>
+    </div>
+  </template>
+
+  <script>
+    class AwCountry extends Polymer.Element {
+      static get is() { return 'aw-country'; }
+
+      static get properties() {
+        return {
+          route: Object,
+          _liveData: Object,
+          _data: Object,
+          _routeData: Object,
+          _all: Object
+        };
+      }
+    }
+
+    window.customElements.define(AwCountry.is, AwCountry);
+  </script>
+</dom-module>
