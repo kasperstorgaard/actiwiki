@@ -1,11 +1,17 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
-<link rel="import" href="../../bower_components/app-route/app-route.html">
 
-<dom-module id="main-navigation">
+<link rel="import" href="../aw-app-routes.html">
+
+<dom-module id="aw-navigation">
     <template>
         <style>
+            :host {
+                display: block;
+            }
+
             .drawer-list {
+                display: block;
                 padding-top: 98px;
                 margin: 0 20px;
             }
@@ -22,35 +28,38 @@
                 color: black;
                 font-weight: bold;
             }
+
+            div > a {
+                margin-left: 8px;
+            }
         </style>
 
-        <iron-selector role="navigation" class="drawer-list" selected="[[pageName]]" attr-for-selected="name">
-          <dom-repeat items="[[pages]]" as="section" initial-count="3">
-            <template>
-              <a name="[[section.name]]" href="/[[section.name]]">[[section.title]]</a>
-            </template>
-          </dom-repeat>
+        <aw-app-routes routes="{{rootRoutes}}"></aw-app-routes>
+
+        <iron-selector
+            role="navigation"
+            class="drawer-list"
+            selected="[[page.slug]]"
+            attr-for-selected="slug">
+          <template is="dom-repeat" items="[[rootRoutes]]">
+            <a slug$="[[item.slug]]" href="[[item.path]]">[[item.name]]</a>
+          </template>
         </iron-selector>
         <div class="drawer-list" role="navigation">
         </div>
     </template>
     <script>
-        class MainNavigation extends Polymer.Element {
-            static get is() { return 'main-navigation'; }
+        class AwNavigation extends Polymer.Element {
+            static get is() { return 'aw-navigation'; }
 
             static get properties() {
                 return {
+                    rootRoutes: Array,
                     page: Object,
-                    route: Object,
-                    _subroute: Object
+                    _route: Object
                 }
             }
-
-            _isActive(key, activePage)
-            {
-                return key === activePage
-            }
         }
-        window.customElements.define(MainNavigation.is, MainNavigation);
+        window.customElements.define(AwNavigation.is, AwNavigation);
     </script>
 </dom-module>

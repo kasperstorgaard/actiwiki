@@ -1,5 +1,4 @@
 <link rel='import' href='../../bower_components/polymer/polymer-element.html'>
-<link rel='import' href='../../bower_components/app-route/app-location.html'>
 <link rel='import' href='../../bower_components/app-route/app-route.html'>
 
 <script>
@@ -26,7 +25,8 @@
 
       static get observers() {
         return [
-          '_updatePattern(_appRoute, pattern)'
+          '_updatePattern(_appRoute, pattern)',
+          '_updateRoute(_appRoute, route)'
         ]
       }
 
@@ -35,28 +35,12 @@
           super.connectedCallback();
         }
 
-        this._initAppLocation();
-        this._initAppRoute();
-      }
-
-      _initAppLocation() {
-        if (!appLocation) {
-          appLocation = document.createElement('app-location');
-          document.body.appendChild(appLocation);
-        }
-
-        appLocation.addEventListener('route-changed', () => this._appRoute.route = appLocation.route);
-      }
-
-      _initAppRoute() {
         const appRoute = document.createElement('app-route');
         this.appendChild(appRoute);
 
-        appRoute.addEventListener('route-changed', () => appLocation.route = appRoute.route);
+        appRoute.addEventListener('route-changed', () => this.route = appRoute.route);
         appRoute.addEventListener('tail-changed', () => this.subroute = appRoute.tail);
         appRoute.addEventListener('data-changed', () => this.routeData = appRoute.data);
-
-        appRoute.route = appLocation.route;
 
         this._appRoute = appRoute;
       }
@@ -64,6 +48,12 @@
       _updatePattern(appRoute, pattern) {
         if (appRoute && pattern !== undefined) {
           appRoute.pattern = pattern;
+        }
+      }
+
+      _updateRoute(appRoute, route) {
+        if (appRoute && route) {
+          appRoute.route = route;
         }
       }
     }

@@ -1,0 +1,28 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html"></link>
+
+<dom-module id="aw-app-router">
+  <script>
+    (() => {
+      const routesData = [
+        { slug: 'home', name: 'Home', path: '/' },
+        { slug: 'country', name: 'Country', path: '/country' },
+        { slug: 'general', name: 'General', path: '/general' }
+      ];
+
+      class AwAppRoutes extends Polymer.Element {
+        static get is() { return "aw-app-routes"; }
+
+        static get properties() {
+          return {
+            routes: {
+              type: Array,
+              value: () => routesData.map(item => Object.assign({}, item)),
+              notify: true
+            }
+          };
+        }
+      }
+      window.customElements.define(AwAppRoutes.is, AwAppRoutes);
+    })();
+  </script>
+</dom-module>
