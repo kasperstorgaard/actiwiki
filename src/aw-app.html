@@ -114,11 +114,11 @@
           <iron-pages
             selected="[[page.slug]]"
             attr-for-selected="slug"
-            fallback-selection="page-not-found"
+            fallback-selection="404"
             role="main">
             <aw-home slug="home"></aw-home>
             <aw-country slug="country" route="[[subroute]]"></aw-country>
-            <aw-404 slug="404"></aw-404>
+            <aw-404 slug="404" root-path="[[rootPath]]"></aw-404>
           </iron-pages>
         </div>
       </app-drawer-layout>
@@ -171,8 +171,7 @@
         const path = this.resolveUrl(`pages/${slug}/aw-${slug}.html`);
 
         Polymer.importHref(path, null, () => {
-          Polymer.importHref('pages/404/aw-404.html');
-          this.page = null;
+          Polymer.importHref(this.resolveUrl('pages/404/aw-404.html'));
         });
       }
     }
