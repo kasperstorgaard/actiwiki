@@ -28,14 +28,12 @@
     <firebase-document
       app-name="actiwiki"
       path="/countries/{{_routeData.country}}"
-      data="{{_liveData}}"
-    ></firebase-document>
+      data="{{_liveData}}"></firebase-document>
 
     <app-indexeddb-mirror
       key="/countries/{{_routeData.country}}"
       data="{{_liveData}}"
-      persisted-data="{{_data}}"
-    ></app-indexeddb-mirror>
+      persisted-data="{{_data}}"></app-indexeddb-mirror>
 
     <div class="card">
       <h1>{{_data.name}}</h1>
