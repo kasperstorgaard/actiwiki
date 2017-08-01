@@ -1,65 +1,63 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
 
-<link rel="import" href="../aw-app-routes.html">
-
 <dom-module id="aw-navigation">
-    <template>
-        <style>
-            :host {
-                display: block;
-            }
+  <template>
+    <style>
+      :host {
+        display: block;
+        margin-left: 8px;
+      }
 
-            .drawer-list {
-                display: block;
-                padding-top: 98px;
-                margin: 0 20px;
-            }
+      .drawer-list {
+        display: block;
+      }
 
-            .drawer-list a {
-                display: block;
-                padding: 0 16px;
-                text-decoration: none;
-                color: var(--app-secondary-color);
-                line-height: 40px;
-            }
+      .drawer-list a {
+        display: block;
+        padding: 0 16px;
+        text-decoration: none;
+        color: var(--app-secondary-color);
+        line-height: 40px;
+      }
 
-            .drawer-list a.iron-selected {
-                color: black;
-                font-weight: bold;
-            }
+      .drawer-list a.iron-selected {
+        color: black;
+        font-weight: bold;
+      }
 
-            div > a {
-                margin-left: 8px;
-            }
-        </style>
+      :not(:host(aw-navigation)) {
+        margin-left: 0;
+      }
+    </style>
 
-        <aw-app-routes routes="{{rootRoutes}}"></aw-app-routes>
-
-        <iron-selector
-            role="navigation"
-            class="drawer-list"
-            selected="[[page.slug]]"
-            attr-for-selected="slug">
-          <template is="dom-repeat" items="[[rootRoutes]]">
-            <a slug$="[[item.slug]]" href="[[item.path]]">[[item.name]]</a>
-          </template>
-        </iron-selector>
-        <div class="drawer-list" role="navigation">
+    <iron-selector
+      role="navigation"
+      class="drawer-list"
+      attr-for-selected="href">
+      <template is="dom-repeat" items="[[routes]]">
+        <div>
+          <a href$="[[item.path]]">[[item.title]]</a>
+          <aw-navigation routes="[[item.subItems]]"><aw-navigation>
         </div>
-    </template>
-    <script>
-        class AwNavigation extends Polymer.Element {
-            static get is() { return 'aw-navigation'; }
+      </template>
+    </iron-selector>
+    <div class="drawer-list" role="navigation">
+    </div>
+  </template>
+  <script>
+    class AwNavigation extends Polymer.Element {
+      static get is() {
+        return 'aw-navigation';
+      }
 
-            static get properties() {
-                return {
-                    rootRoutes: Array,
-                    page: Object,
-                    _route: Object
-                }
-            }
+      static get properties() {
+        return {
+          routes: Array,
+          _subroute: Object
         }
-        window.customElements.define(AwNavigation.is, AwNavigation);
-    </script>
+      }
+    }
+    window.customElements.define(AwNavigation.is, AwNavigation);
+  </script>
 </dom-module>

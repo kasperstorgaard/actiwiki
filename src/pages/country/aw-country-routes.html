@@ -1,0 +1,95 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html"></link>
+
+<link rel="import" href="../../../bower_components/app-route/app-route.html"></link>
+
+<link rel="import" href="../../../bower_components/polymerfire/firebase-auth.html"></link>
+<link rel="import" href="../../../bower_components/polymerfire/firebase-document.html"></link>
+
+<dom-module id="aw-country-routes">
+  <template>
+    <app-route
+      pattern="/country/:country"
+      route="{{route}}"
+      data="{{_routeData}}"></app-route>
+
+    <firebase-auth
+      app-name="actiwiki"
+      user="{{_user}}"
+    ></firebase-auth>
+
+    <firebase-document
+      app-name="actiwiki"
+      path="users/[[_user.uid]]/countries"
+      data="{{_countries}}"
+    ></firebase-document>
+  </template>
+  <script>
+    (() => {
+      const countrySubItems = [{
+        name: "news",
+        title: "News",
+        path: "/news"
+      }, {
+        name: "legal",
+        title: "Legal",
+        path: "/legal"
+      }, {
+        name: "technologies",
+        title: "Technologies",
+        path: "/technology"
+      }];
+
+      class AwCountryRoutes extends Polymer.Element {
+        static get is() { return "aw-country-routes"; }
+
+        static get properties() {
+          return {
+            route: Object,
+            routes: {
+              type: Array,
+              notify: true,
+              computed: '_buildRoutes(_countries.*)'
+            },
+            active: {
+              type: String,
+              notify: true,
+              computed: '_getActive(routes.*, _routeData.country)',
+              value: null
+            },
+            _routeData: Object,
+            _user: Object,
+            _countries: Object
+          };
+        }
+
+        _getActive(changeRecord, country) {
+          const routes = changeRecord.base;
+          if (!routes) {
+            return null;
+          }
+          return routes.find(route => route.name === country);
+        }
+
+        _buildRoutes(changeRecord) {
+          const keys = Object.keys(changeRecord.base);
+
+          if (!keys.length)
+          {
+            return [];
+          }
+
+          return keys.reduce((routes, key) => [...routes, this._buildCountryRoute(key)], []);
+        }
+
+        _buildCountryRoute(country) {
+          return {
+            name: country,
+            path: `${country}`,
+            subItems: countrySubItems.slice()
+          };
+        }
+      }
+      window.customElements.define(AwCountryRoutes.is, AwCountryRoutes);
+    })();
+  </script>
+</dom-module>

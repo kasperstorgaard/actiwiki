@@ -7,8 +7,12 @@
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+
 <link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-app.html">
 
@@ -65,6 +69,11 @@
         --paper-icon-button-ink-color: white;
       }
 
+      .navigation {
+        padding-top: 98px;
+        margin: 0 20px;
+      }
+
       @media (min-width: 641px) {
         app-header #toggle-drawer {
           display: none;
@@ -94,8 +103,11 @@
       database-url="https://actiwiki-c9ab7.firebaseio.com">
     </firebase-app>
 
-    <app-location route="{{route}}"></app-location>
-    <aw-app-routes routes="{{routes}}"></aw-app-routes>
+    <app-location route="{{_route}}"></app-location>
+    <aw-app-routes
+      routes="{{_routes}}"
+      root-path="[[rootPath]]"
+      page="{{_page}}"></aw-app-routes>
 
     <app-header-layout>
       <app-header slot="header">
@@ -108,17 +120,21 @@
 
       <app-drawer-layout>
         <app-drawer id="drawer" slot="drawer" swipe-open persistent>
-          <aw-navigation page="[[page]]"></aw-navigation>
+          <aw-navigation
+            pattern="[[rootPath]]/:page"
+            route="{{_route}}"
+            routes="[[_routes]]"
+            class="navigation"></aw-navigation>
         </app-drawer>
         <div class="app-content">
           <iron-pages
-            selected="[[page.slug]]"
-            attr-for-selected="slug"
+            selected="[[_page.name]]"
+            attr-for-selected="name"
             fallback-selection="404"
             role="main">
-            <aw-home slug="home"></aw-home>
-            <aw-country slug="country" route="[[subroute]]"></aw-country>
-            <aw-404 slug="404" root-path="[[rootPath]]"></aw-404>
+            <aw-home name="home"></aw-home>
+            <aw-country name="country" route="[[_subroute]]"></aw-country>
+            <aw-404 name="404" root-path="[[rootPath]]"></aw-404>
           </iron-pages>
         </div>
       </app-drawer-layout>
@@ -126,54 +142,43 @@
   </template>
 
   <script>
-    class AwApp extends AwRouterBehavior(Polymer.Element) {
+    class AwApp extends Polymer.Element {
 
       static get is() { return 'aw-app'; }
 
       static get properties() {
         return {
-          page: Object,
-          routes: Array,
+          rootPath: String,
+          _page: Object,
+          _route: Object,
+          _subroute: Object,
+          _routes: Array,
           _user: Object,
         };
       }
 
       static get observers() {
         return [
-          '_routeDataChanged(routeData.page)',
-          '_loadPage(page.slug)'
+          '_loadPage(_page.name)'
         ]
       }
 
-      constructor() {
-        super();
-        this.pattern = `${(new URL(this.rootPath)).pathname}:page`;
+      _loadPage(name) {
+        if (!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
+
+        const path = this.resolveUrl(`pages/${name}/aw-${name}.html`);
+
+        Polymer.importHref(path, null, () => {
+          Polymer.importHref(this.resolveUrl('pages/404/aw-404.html'));
+        });
       }
 
       _toggleDrawer() {
         this.$.drawer.toggle();
       }
 
-      _routeDataChanged(pageSlug) {
-        if (pageSlug === undefined)
-        {
-          return;
-        }
-
-        this.page = this.routes.find(page => page.slug === (pageSlug || 'home'));
-      }
-
-      _loadPage(slug) {
-        if (!this.$.drawer.persistent) {
-          this.$.drawer.close();
-        }
-
-        const path = this.resolveUrl(`pages/${slug}/aw-${slug}.html`);
-
-        Polymer.importHref(path, null, () => {
-          Polymer.importHref(this.resolveUrl('pages/404/aw-404.html'));
-        });
-      }
     }
 
     window.customElements.define(AwApp.is, AwApp);
