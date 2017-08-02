@@ -103,11 +103,15 @@
       database-url="https://actiwiki-c9ab7.firebaseio.com">
     </firebase-app>
 
+    <app-route
+      pattern="[[_baseUrl]]:page"
+      route="{{_route}}"
+      tail="{{_subroute}}"
+      data="{{_routeData}}"></app-route>
     <app-location route="{{_route}}"></app-location>
     <aw-app-routes
       routes="{{_routes}}"
-      root-path="[[rootPath]]"
-      page="{{_page}}"></aw-app-routes>
+    ></aw-app-routes>
 
     <app-header-layout>
       <app-header slot="header">
@@ -120,11 +124,7 @@
 
       <app-drawer-layout>
         <app-drawer id="drawer" slot="drawer" swipe-open persistent>
-          <aw-navigation
-            pattern="[[rootPath]]/:page"
-            route="{{_route}}"
-            routes="[[_routes]]"
-            class="navigation"></aw-navigation>
+          <aw-navigation routes="[[_routes]]" class="navigation"></aw-navigation>
         </app-drawer>
         <div class="app-content">
           <iron-pages
@@ -152,15 +152,24 @@
           _page: Object,
           _route: Object,
           _subroute: Object,
+          _routeData: Object,
           _routes: Array,
           _user: Object,
+          _baseUrl: String
         };
       }
 
       static get observers() {
         return [
-          '_loadPage(_page.name)'
+          '_loadPage(_page.name)',
+          '_setPage(_routes.*, _routeData.page)'
         ]
+      }
+
+      constructor() {
+        super();
+
+        this._baseUrl = (new URL(this.rootPath)).pathname;
       }
 
       _loadPage(name) {
@@ -174,11 +183,19 @@
           Polymer.importHref(this.resolveUrl('pages/404/aw-404.html'));
         });
       }
+      
+      _setPage(changeRecord, name) {
+        const routes = changeRecord.base || [];
+        if (name === undefined) {
+          return;
+        }
+
+        this._page = routes.find(route => route.name === (name || 'home'));
+      }
 
       _toggleDrawer() {
         this.$.drawer.toggle();
       }
-
     }
 
     window.customElements.define(AwApp.is, AwApp);

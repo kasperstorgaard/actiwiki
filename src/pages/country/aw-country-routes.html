@@ -8,7 +8,7 @@
 <dom-module id="aw-country-routes">
   <template>
     <app-route
-      pattern="/country/:country"
+      pattern="/:country"
       route="{{route}}"
       data="{{_routeData}}"></app-route>
 
@@ -44,17 +44,15 @@
 
         static get properties() {
           return {
+            prefix: {
+              type: String,
+              value: ''
+            },
             route: Object,
             routes: {
               type: Array,
               notify: true,
-              computed: '_buildRoutes(_countries.*)'
-            },
-            active: {
-              type: String,
-              notify: true,
-              computed: '_getActive(routes.*, _routeData.country)',
-              value: null
+              computed: '_buildRoutes(prefix, _countries.*)'
             },
             _routeData: Object,
             _user: Object,
@@ -62,31 +60,31 @@
           };
         }
 
-        _getActive(changeRecord, country) {
-          const routes = changeRecord.base;
-          if (!routes) {
-            return null;
-          }
-          return routes.find(route => route.name === country);
-        }
+        _buildRoutes(prefix, changeRecord) {
+          const keys = Object.keys(changeRecord.base || {});
 
-        _buildRoutes(changeRecord) {
-          const keys = Object.keys(changeRecord.base);
-
-          if (!keys.length)
-          {
+          if (!keys.length) {
             return [];
           }
 
-          return keys.reduce((routes, key) => [...routes, this._buildCountryRoute(key)], []);
+          return keys.reduce((routes, key) => [...routes, this._buildCountryRoute(prefix, key)], []);
         }
 
-        _buildCountryRoute(country) {
+        _buildCountryRoute(prefix, country) {
+          const path = `${prefix}/${country}`;
           return {
             name: country,
-            path: `${country}`,
-            subItems: countrySubItems.slice()
+            path: path,
+            subItems: this._buildSubItems(path, country).slice()
           };
+        }
+
+        _buildSubItems(prefix) {
+          return countrySubItems.map(item => ({
+            name: item.name,
+            title: item.title,
+            path: `${prefix}${item.path}`
+          }))
         }
       }
       window.customElements.define(AwCountryRoutes.is, AwCountryRoutes);

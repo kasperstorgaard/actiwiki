@@ -1,19 +1,10 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html"></link>
 
-<link rel="import" href="../bower_components/app-route/app-location.html"></link>
-<link rel="import" href="../bower_components/app-route/app-route.html"></link>
-
 <link rel="import" href="pages/country/aw-country-routes.html">
 
 <dom-module id="aw-app-routes">
   <template>
-    <app-location route="{{_route}}"></app-location>
-    <app-route
-      pattern="[[_pattern]]"
-      route="{{_route}}"
-      tail="{{_subroute}}"
-      data="{{_routeData}}"></app-route>
-    <aw-country-routes route="{{_subroute}}" routes="{{_countryRoutes}}">
+    <aw-country-routes prefix="/country" routes="{{routes.1.subItems}}">
     </aw-country-routes>
   </template>
   <script>
@@ -47,51 +38,8 @@
               value: () => routesData.slice(),
               notify: true
             },
-            page: {
-              type: String,
-              notify: true
-            },
-            rootPath: String,
-            _pattern: String,
-            _route: Object,
-            _subroute: Object,
-            _routeData: Object,
             _countryRoutes: Array
           };
-        }
-
-        static get observers() {
-          return [
-            '_update("routes.1.subItems", _countryRoutes.*)',
-            '_routeDataChanged(_routeData.page)'
-          ]
-        }
-
-        constructor () {
-          super();
-
-          this._pattern = `${(new URL(this.rootPath)).pathname}:page`;
-        }
-
-        _routeDataChanged(name) {
-          if (name === undefined)
-          {
-            return;
-          }
-
-          this.page = this.routes.find(route => route.name === (name || 'home'));
-        }
-
-        _update(dataPath, changeRecord) {
-          const { path, base, value } = changeRecord;
-          if (path.indexOf('.') === -1)
-          {
-            this.set(dataPath, base);
-            return;
-          }
-
-          const subPath = path.replace(/^.+\./, '');
-          this.set(`${dataPath}.${subPath}`, value);
         }
       }
       window.customElements.define(AwAppRoutes.is, AwAppRoutes);
