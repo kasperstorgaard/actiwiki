@@ -1,7 +1,6 @@
 <link rel="import" href="../../../bower_components/polymer/polymer-element.html"></link>
 
 <link rel="import" href="../../../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html"></link>
-<link rel="import" href="../../../bower_components/app-route/app-route.html"></link>
 
 <link rel="import" href="../../../bower_components/polymerfire/firebase-auth.html"></link>
 <link rel="import" href="../../../bower_components/polymerfire/firebase-document.html"></link>
@@ -9,11 +8,6 @@
 
 <dom-module id="aw-country-routes">
   <template>
-    <app-route
-      pattern="/:country"
-      route="{{route}}"
-      data="{{_routeData}}"></app-route>
-
     <firebase-auth
       app-name="actiwiki"
       user="{{_user}}"
@@ -55,13 +49,11 @@
               type: String,
               value: ''
             },
-            route: Object,
             routes: {
               type: Array,
               notify: true,
               computed: '_buildRoutes(prefix, _countries.*)'
             },
-            _routeData: Object,
             _user: Object,
             _liveCountries: Object,
             _countries: Object
