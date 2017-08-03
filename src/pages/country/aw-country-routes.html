@@ -1,9 +1,11 @@
 <link rel="import" href="../../../bower_components/polymer/polymer-element.html"></link>
 
+<link rel="import" href="../../../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html"></link>
 <link rel="import" href="../../../bower_components/app-route/app-route.html"></link>
 
 <link rel="import" href="../../../bower_components/polymerfire/firebase-auth.html"></link>
 <link rel="import" href="../../../bower_components/polymerfire/firebase-document.html"></link>
+
 
 <dom-module id="aw-country-routes">
   <template>
@@ -20,23 +22,28 @@
     <firebase-document
       app-name="actiwiki"
       path="users/[[_user.uid]]/countries"
-      data="{{_countries}}"
+      data="{{_liveCountries}}"
     ></firebase-document>
+
+    <app-indexeddb-mirror
+      key="user/countries"
+      data="{{_liveCountries}}"
+      persisted-data="{{_countries}}"></app-indexeddb-mirror>
   </template>
   <script>
     (() => {
       const countrySubItems = [{
         name: "news",
         title: "News",
-        path: "/news"
+        basePath: "/news"
       }, {
         name: "legal",
         title: "Legal",
-        path: "/legal"
+        basePath: "/legal"
       }, {
         name: "technologies",
         title: "Technologies",
-        path: "/technology"
+        basePath: "/technology"
       }];
 
       class AwCountryRoutes extends Polymer.Element {
@@ -56,6 +63,7 @@
             },
             _routeData: Object,
             _user: Object,
+            _liveCountries: Object,
             _countries: Object
           };
         }
@@ -74,16 +82,16 @@
           const path = `${prefix}/${country}`;
           return {
             name: country,
-            path: path,
+            basePath: '',
+            path,
+            title: country,
             subItems: this._buildSubItems(path, country).slice()
           };
         }
 
         _buildSubItems(prefix) {
-          return countrySubItems.map(item => ({
-            name: item.name,
-            title: item.title,
-            path: `${prefix}${item.path}`
+          return countrySubItems.map(item => Object.assign(item, {
+            path: `${prefix}${item.basePath}`
           }))
         }
       }
