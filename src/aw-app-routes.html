@@ -1,31 +1,25 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html"></link>
 
-<link rel="import" href="pages/country/aw-country-routes.html">
-
 <dom-module id="aw-app-routes">
-  <template>
-    <aw-country-routes prefix="/country" routes="{{routes.1.subItems}}">
-    </aw-country-routes>
-  </template>
   <script>
     (() => {
       const routesData = [{
         name: 'home',
         title: 'Home',
         path: '/',
-        subItems: null
+        items: null
       },
       {
-        name: 'country',
-        title: 'Country',
-        path: '/country',
-        subItems: null
+        name: 'countries',
+        title: 'Countries',
+        path: '/countries',
+        items: null
       },
       {
         name: 'general',
         title: 'General',
         path: '/general',
-        subItems: null
+        items: null
       }];
 
       class AwAppRoutes extends Polymer.Element {

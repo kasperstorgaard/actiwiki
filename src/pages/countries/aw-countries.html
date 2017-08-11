@@ -6,7 +6,7 @@
 
 <link rel="import" href="../../shared/aw-styles.html">
 
-<dom-module id="aw-country">
+<dom-module id="aw-countries">
   <template>
     <style include="aw-styles">
       :host {
@@ -42,8 +42,8 @@
   </template>
 
   <script>
-    class AwCountry extends Polymer.Element {
-      static get is() { return 'aw-country'; }
+    class AwCountries extends Polymer.Element {
+      static get is() { return 'aw-countries'; }
 
       static get properties() {
         return {
@@ -56,6 +56,6 @@
       }
     }
 
-    window.customElements.define(AwCountry.is, AwCountry);
+    window.customElements.define(AwCountries.is, AwCountries);
   </script>
 </dom-module>
